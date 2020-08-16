@@ -16,6 +16,7 @@ if (!args[0]) {
     console.log("kusaki - youtube archival tool");
     console.log("===============================");
     console.log("`-i` - look for video by ID");
+    console.log("`-title` - look for video by title (less accurate)");
     console.log("");
 } else if (args[0] == "-i" && !args[1]) {
     console.log("");
@@ -36,7 +37,9 @@ if (!args[0]) {
     console.log("===============================");
     console.log("- searching for the entire internet for the id...");
     console.log("");
-    fs.mkdirSync("./json/")
+    if (!fs.existsSync("./json")) {
+        fs.mkdirSync("./json/");
+    }
     got("https://html.duckduckgo.com/html/?q=" + args[1] + "&attr=video&kl=us-en").then(function(response) {
         var ddg = [];
         var $ = cheerio.load(response.body);
@@ -63,4 +66,13 @@ if (!args[0]) {
         console.log("[!] finished file `" + fn + "`");
         console.log("");
     })
-}
+}// else if (args[0] == "-title" && !args[1]) {
+ //   console.log("");
+ //   console.log("kusaki - youtube archival tool");
+  //  console.log("===============================");
+ //   console.log("error! this parameter requires an input ");
+ //   console.log("(video).");
+ //   console.log("");
+//} else if (args[0] == "-title" && args[1]) {
+//    for (var i = 1 )
+//}

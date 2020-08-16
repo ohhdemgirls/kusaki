@@ -1,0 +1,29 @@
+{
+  "name": "kusaki",
+  "version": "1.0.0",
+  "description": "find reuploads of youtube videos programically",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/n0rmancodes/kusaki.git"
+  },
+  "keywords": [
+    "youtube",
+    "archive"
+  ],
+  "author": "n0rmancodes",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/n0rmancodes/kusaki/issues"
+  },
+  "homepage": "https://github.com/n0rmancodes/kusaki#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "got": "^11.5.2",
+    "ytdl-core": "^3.2.1",
+    "ytsr": "^0.1.21"
+  }
+}

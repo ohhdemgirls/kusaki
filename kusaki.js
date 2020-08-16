@@ -9,7 +9,7 @@ if (!args[0]) {
     console.log("");
     console.log("kusaki - youtube archival tool");
     console.log("===============================");
-    console.log("run `node index -help` to see the available commands");
+    console.log("run `node kusaki -help` to see the available commands");
     console.log("");
 } else if (args[0] == "--help") {
     console.log("");
@@ -45,7 +45,7 @@ if (!args[0]) {
         var $ = cheerio.load(response.body);
         for (var c in $(".result .links_main h2 a")) {
             if ($(".result .links_main h2 a")[c].children && $(".result .links_main h2 a")[c].children[0] && $(".result .links_main h2 a")[c].children[0].data !== "No  results.") {
-                // ^ checks if there url has a name
+                    //^ checks if there url has a name
                 if ($(".result .links_main h2 a")[c].attribs && $(".result .links_main h2 a")[c].attribs.href) {
                     var a = url.parse($(".result .links_main h2 a")[c].attribs.href, true).query.uddg;
                     var d = parseInt(c) + 1;
@@ -66,13 +66,51 @@ if (!args[0]) {
         console.log("[!] finished file `" + fn + "`");
         console.log("");
     })
-}// else if (args[0] == "-title" && !args[1]) {
- //   console.log("");
- //   console.log("kusaki - youtube archival tool");
-  //  console.log("===============================");
- //   console.log("error! this parameter requires an input ");
- //   console.log("(video).");
- //   console.log("");
-//} else if (args[0] == "-title" && args[1]) {
-//    for (var i = 1 )
-//}
+} else if (args[0] == "-title" && !args[1]) {
+    console.log("");
+    console.log("kusaki - youtube archival tool");
+    console.log("===============================");
+    console.log("error! this parameter requires an input ");
+    console.log("(video title).");
+    console.log("");
+} else if (args[0] == "-title" && args[1]) {
+    if (!fs.existsSync("./json")) {
+        fs.mkdirSync("./json/");
+    }
+    var q = "";
+    for (var i = 1; i < args.length; i++) {
+        q = q + args[i];
+    }
+    got("https://html.duckduckgo.com/html/?q=" + q + " reupload&attr=video&kl=us-en").then(function(response) {
+        var ddg = [];
+        var $ = cheerio.load(response.body);
+        for (var c in $(".result .links_main h2 a")) {
+            if ($(".result .links_main h2 a")[c].children && $(".result .links_main h2 a")[c].children[0] && $(".result .links_main h2 a")[c].children[0].data !== "No  results.") {
+                    //^ checks if there url has a name
+                if ($(".result .links_main h2 a")[c].attribs && $(".result .links_main h2 a")[c].attribs.href) {
+                    var a = url.parse($(".result .links_main h2 a")[c].attribs.href, true).query.uddg;
+                    var d = parseInt(c) + 1;
+                    console.log("- pushing to array... [result " + d + "]");
+                    ddg.push({"linkTitle": $(".result .links_main h2 a")[c].children[0].data, "url": a})
+                }
+            }
+        }
+        console.log("");
+        console.log("- writing results to json file...");
+        console.log("");
+        var fn = "./json/data-" + args[1] + ".json"
+        if (fs.existsSync(fn)) {
+            fs.unlinkSync(fn)
+        }
+        fs.appendFileSync(fn, "");
+        fs.writeFileSync(fn, JSON.stringify(ddg));
+        console.log("[!] finished file `" + fn + "`");
+        console.log("");
+    })
+} else {
+    console.log("");
+    console.log("kusaki - youtube archival tool");
+    console.log("===============================");
+    console.log("invalid arguments");
+    console.log("");
+}

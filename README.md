@@ -7,6 +7,11 @@ Kusaki is a tool to find reuploads of YouTube videos using the power of search e
 2. Install the dependencies via ``npm install``.
 3. Run Kusaki via ``node index --help``
 
+## How it works
+
+First, it searches DuckDuckGo (in HTML version of the site) for the ID, specifies what kind of result (English video sites),
+scrapes the results and throws the results in a JSON file.
+
 ## Example
 
 Terminal Input:

@@ -21,7 +21,9 @@
   },
   "homepage": "https://github.com/n0rmancodes/kusaki#readme",
   "dependencies": {
+    "chalk": "^4.1.0",
     "cheerio": "^1.0.0-rc.3",
+    "enquirer": "^2.3.6",
     "got": "^11.5.2",
     "ytdl-core": "^3.2.1",
     "ytsr": "^0.1.21"

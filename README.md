@@ -4,9 +4,10 @@ Kusaki is a console tool to find reuploads of YouTube videos using the power of 
 ## Setup
 
 1. Download the latest release of Kusaki and [Node.js](https://nodejs.org/en/download/).
+
 2. Install the dependencies via ``npm install``.
-3. Run ``node kusaki``.
-3a. Alternatively, run ``node kusaki --id [id] --title [title]``
+
+3. Run ``node kusaki``. (Alternatively, if it's easier, run ``node kusaki --id [id] --title [title]``.)
 
 ## How it works
 

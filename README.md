@@ -6,7 +6,7 @@ If you're a YouTube archivist like myself, you hate to see missing videos due to
 YouTube takedowns, or the creator removing the video themselves - resulting in an incomplete archive.
 
 This tool is meant to fix that! It searches many websites (thanks to [Peteyvid](https://peteyvid.com), 
-[Archive.org](https://archive.org), and [Dailymotion](https://dailymotion.com) scraping) to find
+[Archive.org](https://archive.org), and [Dailymotion (via DuckDuckGo searches)](https://dailymotion.com) scraping) to find
 reuploads.
 
 ## Setup

@@ -6,6 +6,10 @@ Kusaki is a console tool to find reuploads of YouTube videos using the power of 
 If you're a YouTube archivist like myself, you hate to see missing videos due to copyright takedowns,
 YouTube takedowns, or the creator removing the video themselves - resulting in an incomplete archive.
 
+## Credits
+- [/u/colethedj](https://www.reddit.com/user/colethedj) - Helping with suggestions on how to find videos on this project
+- IanRises, [Electohaxz](http://electohaxz.tk/) - giving me videos to test this on
+
 This tool is meant to fix that! It searches many websites (thanks to [Peteyvid](https://peteyvid.com), 
 [Archive.org](https://archive.org), and [Dailymotion (via DuckDuckGo searches)](https://dailymotion.com) scraping) to find
 reuploads.

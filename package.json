@@ -23,6 +23,7 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "cheerio": "^1.0.0-rc.3",
+    "compare-strings": "^1.1.0",
     "enquirer": "^2.3.6",
     "got": "^11.5.2",
     "ytdl-core": "^3.2.1"

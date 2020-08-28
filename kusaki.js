@@ -1,10 +1,9 @@
 const got = require("got");
-const ytsr = require("ytsr");
 const ytdl = require("ytdl-core");
 const cheerio = require("cheerio");
 const fs = require("fs");
-const url = require("url");
 const chalk = require('chalk');
+const compare = require('compare-strings');
 const { Input } = require('enquirer');
 console.log("");
 console.log("kusaki - youtube archival tool");
@@ -108,13 +107,19 @@ function searchPetey(string, old) {
         got("https://www.peteyvid.com/index.php?q=" + string.title + '"' + string.id + '"').then(function(response) {
             var $ = cheerio.load(response.body);
             for (var c in $("ol li blockquote")) {
-                if ($("ol li blockquote")[c].attribs) {
-                    if ($("ol li blockquote")[c].attribs.cite !== undefined) {
-                        old.push($("ol li blockquote")[c].attribs.cite);
+                if ($("ol li blockquote header h3 cite h1 a")[c].children && $("ol li blockquote header h3 cite h1 a")[c].children[0] && $("ol li blockquote header h3 cite h1 a")[c].children[0].data) {
+                    var title = $("ol li blockquote header h3 cite h1 a")[c].children[0].data.replace(/\t/g, '');
+                    console.log(title);
+                    if ($("ol li blockquote")[c].attribs) {
+                        if ($("ol li blockquote")[c].attribs.cite !== undefined) {
+                            if (compare(string.title, title) > 0.65) {
+                                old.push($("ol li blockquote")[c].attribs.cite);
+                            }
+                        }
                     }
                 }
             }
-            searchDailymotion(string, old)
+            searchDailymotion(string, old);
         })
     } else {
         got("https://www.peteyvid.com/index.php?q=" + '"' + string.id + '"').then(function(response) {

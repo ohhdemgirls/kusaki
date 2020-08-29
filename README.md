@@ -18,3 +18,4 @@ reuploads.
 1. Download the latest release of Kusaki and [Node.js](https://nodejs.org/en/download/).
 2. Install the dependencies via ``npm install``.
 3. Run ``node kusaki``. (Alternatively, if it's easier, run ``node kusaki --id [id] --title [title]``.)
+4. If you're not savy at reading JSON files, you can run ``node reader --file [filename]`` to read the files quickly.

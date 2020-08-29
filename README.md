@@ -1,7 +1,7 @@
 # Kusaki
 Kusaki is a console tool to find reuploads of YouTube videos using the power of search engines.
 
-[Video Demo](https://youtu.be/gKk_ETAa7y0)
+[Video Demo](https://youtu.be/gKk_ETAa7y0) - [Releases](https://github.com/n0rmancodes/kusaki/releases/latest)
 ## Use cases
 If you're a YouTube archivist like myself, you hate to see missing videos due to copyright takedowns,
 YouTube takedowns, or the creator removing the video themselves - resulting in an incomplete archive.

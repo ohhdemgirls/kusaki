@@ -240,12 +240,14 @@ function searchDailymotion(string, old) {
                     }
                 } else {
                     if ($(".results .result .links_main .result__snippet")[c].attribs && $(".results .result .links_main .result__snippet")[c].attribs.href) {
-                        var l = $(".results .result .links_main .result__snippet")[c].attribs.href;
-                        var d = {
-                            "link": l,
-                            "source": "dailymotion.com"
+                        if ($(".results .result .links_main .result__snippet")[c].children && $(".results .result .links_main .result__snippet")[c].children[0].data && $(".results .result .links_main .result__snippet")[c].children[0].data.includes(string.id)) {
+                            var l = $(".results .result .links_main .result__snippet")[c].attribs.href;
+                            var d = {
+                                "link": l,
+                                "source": "dailymotion.com"
+                            }
+                            old.push(d);
                         }
-                        old.push(d);
                     }
                 }
             }
@@ -254,16 +256,12 @@ function searchDailymotion(string, old) {
     })
 }
 
-function finish(string, data, e, e2) {
+function finish(string, data) {
     cls();
     console.log(chalk.greenBright("✓") + chalk.blueBright(" [formatted string]"));
     console.log(chalk.greenBright("✓") + chalk.blueBright(" [searced archive.org]"));
     console.log(chalk.greenBright("✓") + chalk.blueBright(" [searced peteyvid.com]"));
-    if (e !== "errDaily") {
-        console.log(chalk.greenBright("✓") + chalk.blueBright(" [searced dailymotion]"));
-    } else {
-        console.log(chalk.redBright("✕") + chalk.red(" failed to get dailymotion results due to an error - " + e2));
-    }
+    console.log(chalk.greenBright("✓") + chalk.blueBright(" [searced dailymotion]"));
     console.log(chalk.yellowBright("- writing to json..."));
     var fn = "./json/data-" + string.id + ".json";
     fs.writeFileSync(fn, JSON.stringify(data));
@@ -271,13 +269,16 @@ function finish(string, data, e, e2) {
     console.log(chalk.greenBright("✓") + chalk.blueBright(" [formatted string]"));
     console.log(chalk.greenBright("✓") + chalk.blueBright(" [searced archive.org]"));
     console.log(chalk.greenBright("✓") + chalk.blueBright(" [searced peteyvid.com]"));
-    if (e !== "errDaily") {
-        console.log(chalk.greenBright("✓") + chalk.blueBright(" [searced dailymotion]"));
-    } else {
-        console.log(chalk.redBright("✕") + chalk.red(" failed to get dailymotion results due to an error - " + e2));
-    }
+    console.log(chalk.greenBright("✓") + chalk.blueBright(" [searced dailymotion]"));
     console.log(chalk.greenBright("✓") + chalk.blueBright(" [wrote to " + fn + "]"));
     makeTail(data.length, data);
+    if (data.length == 0 && string.title) {
+        console.log(chalk.yellowBright("[tip] ") + randomTip("hasTitle"));
+    } else if (data.length == 0 && !string.title) {
+        console.log(chalk.yellowBright("[tip] ") + randomTip("noTitle"));
+    } else {
+        console.log(chalk.yellowBright("[tip] ") + "this data may not be as accurate, try adding a title.")
+    }
     console.log("");
 }
 
@@ -331,4 +332,19 @@ function srcs(data) {
         }
     }
     return src;
+}
+
+function randomTip(title) {
+    if (title == "hasTitle") {
+        var tips = [
+            "to find more videos, try titles in different languages."
+        ]
+        return tips[Math.floor(Math.random()*tips.length)];
+    } else {
+        var tips = [
+            "to find more videos, try inputting a title, it doesn't have to be 100% accurate."
+        ]
+        return tips[Math.floor(Math.random()*tips.length)];
+    }
+    
 }

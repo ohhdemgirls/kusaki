@@ -136,7 +136,7 @@ function searchPetey(string, old) {
     console.log(chalk.yellowBright("- searching peteyvid.com..."));
     makeTail(old.length, old);
     if (string.title) {
-        var url = "https://www.peteyvid.com/index.php?q=" + encodeURI(string.title + '"' + string.id + '"');
+        var url = "https://www.peteyvid.com/index.php?q=" + encodeURI(string.title + ' "' + string.id + '"');
         got(url, {
             headers: {
                 "Host": "www.peteyvid.com",
@@ -146,22 +146,23 @@ function searchPetey(string, old) {
                 "Accept-Encoding": "gzip, deflate, br",
                 "Referer": "https://www.peteyvid.com/index.php",
                 "Connection": "keep-alive",
+                "Cookies": "style=default",
                 "Upgrade-Insecure-Requests": "1",
                 "DNT": "1",
-                "TE": "Trailers"
+                "Cache-Control": "max-age=0"
             }
         }).then(function(response) {
             var $ = cheerio.load(response.body);
-            if ($("ol li blockquote").length > 0) {
-                for (var c in $("ol li blockquote")) {
-                    if ($("ol li blockquote header h3 cite h1 a")[c].children && $("ol li blockquote header h3 cite h1 a")[c].children[0] && $("ol li blockquote header h3 cite h1 a")[c].children[0].data) {
-                        var title = $("ol li blockquote header h3 cite h1 a")[c].children[0].data.replace(/\t/g, '');
-                        if ($("ol li blockquote")[c].attribs) {
-                            if ($("ol li blockquote")[c].attribs.cite !== undefined) {
+            if ($("#results-section .list li blockquote").length > 0) {
+                for (var c in $("#results-section .list li blockquote")) {
+                    if ($("#results-section .list li blockquote header h3 cite h1 a")[c].children && $("#results-section .list li blockquote header h3 cite h1 a")[c].children[0] && $("#results-section .list li blockquote header h3 cite h1 a")[c].children[0].data) {
+                        var title = $("#results-section .list li blockquote header h3 cite h1 a")[c].children[0].data.replace(/\t/g, '');
+                        if ($("#results-section .list li blockquote")[c].attribs) {
+                            if ($("#results-section .list li blockquote")[c].attribs.cite !== undefined) {
                                 if (compare(string.title, title) > 0.65) {
                                     var d = {
-                                        "link": $("ol li blockquote")[c].attribs.cite,
-                                        "source": $("ol li .website")[c].children[0].data
+                                        "link": $("#results-section .list li blockquote")[c].attribs.cite,
+                                        "source": $("#results-section .list li .website")[c].children[0].data
                                     }
                                     old.push(d);
                                 }
@@ -169,26 +170,27 @@ function searchPetey(string, old) {
                         }
                     }
                 }
+            } else if ($(".captcha_play_button").length > 0) {
+                cls();
+                console.log(chalk.yellow("[info]") + chalk.red(" captcha found!"));
+                console.log(chalk.red("please do the captcha in your browser"));
+                console.log(chalk.redBright("at https://www.peteyvid.com/robots.php"));
+                return;
             } else {
-                if ($(".captcha_play_button")) {
-                    cls();
-                    console.log(chalk.yellow("[info]") + chalk.red(" captcha found!"));
-                    console.log(chalk.red("please do the captcha in your browser"));
-                    console.log(chalk.redBright("at https://www.peteyvid.com/robots.php"));
-                    return;
-                }
+                searchDailymotion(string, old);
+                return;
             }
             searchDailymotion(string, old);
         })
     } else {
         got("https://www.peteyvid.com/index.php?q=" + '"' + string.id + '"').then(function(response) {
             var $ = cheerio.load(response.body);
-            for (var c in $("ol li blockquote")) {
-                if ($("ol li blockquote")[c].attribs) {
-                    if ($("ol li blockquote")[c].attribs.cite !== undefined) {
+            for (var c in $("#results-section .list li blockquote")) {
+                if ($("#results-section .list li blockquote")[c].attribs) {
+                    if ($("#results-section .list li blockquote")[c].attribs.cite !== undefined) {
                         var d = {
-                            "link": $("ol li blockquote")[c].attribs.cite,
-                            "source": $("ol li .website")[c].children[0].data
+                            "link": $("#results-section .list li blockquote")[c].attribs.cite,
+                            "source": $("#results-section .list li .website")[c].children[0].data
                         }
                         old.push(d);
                     }

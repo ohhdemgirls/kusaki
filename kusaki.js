@@ -5,6 +5,7 @@ const fs = require("fs");
 const args = process.argv.slice(2);
 const chalk = require("chalk");
 const compare = require("compare-strings");
+const redddit = require("redddit");
 const { Input } = require('enquirer');
 console.log("");
 console.log(chalk.greenBright("kusaki - youtube archival tool"));
@@ -12,11 +13,8 @@ console.log("===============================");
 console.log("if you don't know certain video details,");
 console.log("just leave it blank!");
 console.log("");
-console.log(chalk.red("NOTE!") + chalk.redBright(" This tool requires an ID at the very least!"))
-console.log("");
 if (args[0] == "--id" && args[1]) {
     var a = args[1];
-    console.log(a);
     if (a.substring(0, 4) == "http") {
         if (ytdl.validateURL(a)) {
             var a = ytdl.getURLVideoID(a);
@@ -40,10 +38,48 @@ if (args[0] == "--id" && args[1]) {
         }
         searchArchive(data);
     } else {
-        var data = {
-            id: a
-        }
-        searchArchive(data);
+        console.log(chalk.yellowBright("- attempting to retrieve title..."))
+        redddit.search("url:youtu.be/" + args[1], function(err, resp) {
+            if (err) {
+                var data = {
+                    id: a
+                }
+                searchArchive(data);
+                return;
+            }
+            for (var c in resp) {
+                if (resp[c].data) {
+                    if (resp[c].data.media && resp[c].data.media.oembed) {
+                        var title = resp[c].data.media.oembed.title;
+                        var data = {
+                            id: a,
+                            title: title
+                        }
+                        searchArchive(data);
+                        return;
+                    } else {
+                        var data = {
+                            id: a
+                        }
+                        searchArchive(data);
+                        return;
+                    }
+                } else {
+                    var data = {
+                        id: a
+                    }
+                    searchArchive(data);
+                    return;
+                }
+            }
+            if (!resp[0]) {
+                var data = {
+                    id: a
+                }
+                searchArchive(data);
+                return;
+            }
+        })
     }
 } else {
     var i1 = new Input({"message": "YouTube ID"})
@@ -64,7 +100,7 @@ if (args[0] == "--id" && args[1]) {
             }
         }
         var i2 = new Input({"message": "Video Title"})
-        i2.run().then(function(a) {
+        i2.run().then(async function(a) {
             const ans2 = a.toString();
             cls();
             console.log(chalk.yellow("- formatting main string..."));
@@ -72,11 +108,49 @@ if (args[0] == "--id" && args[1]) {
                 console.log(chalk.red("ERR! The YouTube ID is not valid"));
                 return;
             }
-            const data = {
-                id: ans1,
-                title: ans2
+            if (ans2 == "") {
+                redddit.search("url:youtu.be/" + ans1, function(err, resp) {
+                    if (err) {
+                        var data = {
+                            id: ans1
+                        }
+                        searchArchive(data);
+                        return;
+                    }
+                    for (var c in resp) {
+                        if (resp[c].data) {
+                            if (resp[c].data.media && resp[c].data.media.oembed) {
+                                var title = resp[c].data.media.oembed.title;
+                                var data = {
+                                    id: ans1,
+                                    title: title
+                                }
+                                searchArchive(data);
+                                return;
+                            } else {
+                                var data = {
+                                    id: ans1
+                                }
+                                searchArchive(data);
+                                return;
+                            }
+                        } else {
+                            var data = {
+                                id: ans1
+                            }
+                            searchArchive(data);
+                            return;
+                        }
+                    }
+                    if (!resp[0]) {
+                        var data = {
+                            id: ans1
+                        }
+                        searchArchive(data);
+                        return;
+                    }
+                })
             }
-            searchArchive(data);
         })
     })
 }
@@ -254,6 +328,8 @@ function searchDailymotion(string, old) {
                 }
             }
         }
+        finish(string, old);
+    }).catch(function(e) {
         finish(string, old);
     })
 }
